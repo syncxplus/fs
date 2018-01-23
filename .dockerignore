@@ -1,0 +1,5 @@
+.idea/*
+data/*
+src/log/*
+Dockerfile
+docker-compose.yml

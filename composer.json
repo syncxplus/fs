@@ -1,0 +1,23 @@
+{
+    "name": "syncxplus/fs",
+    "authors": [
+        {
+            "name": "jibo",
+            "email": "jibo@outlook.com"
+        }
+    ],
+    "license": "Unlicense",
+    "require": {
+        "bcosca/fatfree": "dev-syncxplus"
+    },
+    "repositories": {
+        "0": {
+            "type": "vcs",
+            "url": "https://github.com/syncxplus/fatfree"
+        },
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+}
