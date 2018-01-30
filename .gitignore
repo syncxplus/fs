@@ -1,3 +1,4 @@
-/data
+/html/data
+/html/logs
 /vendor
-/src/log
+composer.lock

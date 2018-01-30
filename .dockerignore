@@ -1,5 +1,11 @@
-.idea/*
-data/*
-src/log/*
-Dockerfile
+/.idea
+/.git
+/html/data
+/html/logs
+/vendor
+.dockerignore
+.gitignore
+composer.lock
 docker-compose.yml
+Dockerfile
+README.md

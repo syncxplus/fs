@@ -6,8 +6,11 @@ class Upload extends \Web
 {
     private $uri;
     private $file;
+    private $logger;
 
     function beforeRoute($f3) {
+        $this->logger = new \Logger();
+        $this->logger->info($f3->VERB, $f3->REALM);
         $this->uri = ($_SERVER['QUERY_STRING']) ? substr($f3->URI, 0, strlen($f3->URI) - strlen($_SERVER['QUERY_STRING']) - 1) : $f3->URI;
         $this->file = $this->hash();
     }
@@ -44,7 +47,7 @@ class Upload extends \Web
                 header('Content-Type: ' . $this->mime($file));
                 echo file_get_contents($file);
             } else {
-                header('HTTP/1.1 404 Not Found');
+                $f3->error(404);
             }
         }
     }
