@@ -39,13 +39,13 @@ class Upload extends \Web
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
             header('Content-Type:' . $this->mime($file));
-            echo file_get_contents($file);
+            readfile($file);
         } else {
             $file = $f3->get('UPLOADS') . basename($this->uri);
             if (is_file($file)) {
                 header('Content-Length:' . filesize($file));
                 header('Content-Type: ' . $this->mime($file));
-                echo file_get_contents($file);
+                readfile($file);
             } else {
                 $f3->error(404);
             }
