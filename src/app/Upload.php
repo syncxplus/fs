@@ -26,8 +26,7 @@ class Upload extends \Web
             if (!is_dir(dirname($target)))  {
                 mkdir(dirname($target), 0755, true);
             }
-            file_put_contents($target, file_get_contents($receive['tmp_name']), LOCK_EX);
-            unlink($receive['tmp_name']);
+            rename($receive['tmp_name'], $target);
             header('HTTP/1.1 201 OK');
         }
     }
