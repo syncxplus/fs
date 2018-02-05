@@ -4,15 +4,15 @@ namespace app;
 
 class Upload extends \Web
 {
-    private $uri;
-    private $file;
     private $logger;
+    private $fileName;
+    private $hashName;
 
     function beforeRoute($f3) {
         $this->logger = new \Logger();
         $this->logger->info($f3->VERB, $f3->REALM);
-        $this->uri = ($_SERVER['QUERY_STRING']) ? substr($f3->URI, 0, strlen($f3->URI) - strlen($_SERVER['QUERY_STRING']) - 1) : $f3->URI;
-        $this->file = $this->hash();
+        $this->fileName = preg_replace(['/^.+[\\\\\\/]/', '/\?.*/'], '', $f3->URI);
+        $this->hashName = $this->hash();
     }
 
     function upload($f3)
@@ -20,9 +20,9 @@ class Upload extends \Web
         $receive = $this->receive(null, true, false);
 
         if ($receive === false || !is_file($receive['tmp_name'])) {
-            header('HTTP/1.1 500 Upload Failure');
+            $f3->error(500);
         } else {
-            $target = $f3->get('UPLOADS') . $this->file;
+            $target = $f3->get('UPLOADS') . $this->hashName;
             if (!is_dir(dirname($target)))  {
                 mkdir(dirname($target), 0755, true);
             }
@@ -33,14 +33,13 @@ class Upload extends \Web
 
     function get($f3)
     {
-        $file = $f3->get('UPLOADS') . $this->file;
-
+        $file = $f3->get('UPLOADS') . $this->fileName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
             header('Content-Type:' . $this->mime($file));
             readfile($file);
         } else {
-            $file = $f3->get('UPLOADS') . basename($this->uri);
+            $file = $f3->get('UPLOADS') . $this->hashName;
             if (is_file($file)) {
                 header('Content-Length:' . filesize($file));
                 header('Content-Type: ' . $this->mime($file));
@@ -61,23 +60,13 @@ class Upload extends \Web
      */
     private function hash()
     {
-        $pathInfo = pathinfo($this->uri);
-
-        if ($pathInfo['extension']) {
-            $name = substr($pathInfo['basename'], 0, strlen($pathInfo['basename']) - strlen($pathInfo['extension']) - 1);
+        $baseName = preg_replace('/\..*/', '', $this->fileName);
+        $parts = array_diff(explode('_', $baseName), ['o']);
+        if (count($parts) > 1) {
+            $dir = $parts[1];
         } else {
-            $name = $pathInfo['basename'];
+            $dir = substr($parts[0], 0, min(strlen($baseName), 8));
         }
-
-        $parts = array_diff(explode('_', $name), ['o']);
-        $count = count($parts);
-
-        if ($count > 1) {
-             $dir = $parts[1];
-        } else {
-            $dir = substr($parts[0], 0, min(strlen($parts[0]), 8));
-        }
-
-        return ($dir ? '/' . $dir . '/' : '/') . $pathInfo['basename'];
+        return ($dir ? '/' . $dir . '/' : '/') . $this->fileName;
     }
 }
