@@ -2,7 +2,7 @@
 define('HTML', __DIR__);
 define('ROOT', dirname(HTML));
 
-require_once ROOT . '/vendor/autoload.php';
+require ROOT . '/vendor/autoload.php';
 
 call_user_func(function ($f3) {
     $f3->config(
@@ -22,7 +22,8 @@ call_user_func(function ($f3) {
         'UPLOADS' => $sysdir['uploads'],
         'ONERROR' => function ($f3) {
             $error = $f3->get('ERROR');
-            if (!$f3->get('DEBUG')) {
+            echo json_encode(['error' => $error], JSON_UNESCAPED_UNICODE);
+            /*if (!$f3->get('DEBUG')) {
                 unset($error['trace']);
             }
             if ($f3->get('AJAX')) {
@@ -30,7 +31,7 @@ call_user_func(function ($f3) {
             } else {
                 $f3->set('error', $error);
                 echo Template::instance()->render('error.html');
-            }
+            }*/
         }
     ]);
 

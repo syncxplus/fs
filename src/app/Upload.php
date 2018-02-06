@@ -10,8 +10,21 @@ class Upload extends \Web
 
     function beforeRoute($f3) {
         $this->logger = new \Logger();
-        $this->logger->info($f3->VERB, $f3->REALM);
-        $this->fileName = preg_replace(['/^.+[\\\\\\/]/', '/\?.*/'], '', $f3->URI);
+        $this->logger->info($f3->get('VERB'), $f3->get('REALM'));
+        $start = strrpos($f3->get('URI'), '/');
+        if ($start === false) {
+            $start = 0;
+        } else {
+            ++ $start;
+        }
+        $length = strpos($f3->get('URI'), '?');
+        if ($length === false) {
+            $length = strlen($f3->get('URI')) - $start;
+        } else {
+            $length -= $start;
+        }
+        $this->fileName = substr($f3->get('URI'), $start, $length);
+        $this->logger->info('BASE', $this->fileName);
         $this->hashName = $this->hash();
         $this->logger->info('HASH', $this->hashName);
     }
@@ -19,7 +32,6 @@ class Upload extends \Web
     function upload($f3)
     {
         $receive = $this->receive(null, true, false);
-
         if ($receive === false || !is_file($receive['tmp_name'])) {
             $f3->error(500);
         } else {
@@ -83,7 +95,8 @@ class Upload extends \Web
      */
     private function hash()
     {
-        $baseName = preg_replace('/\..*/', '', $this->fileName);
+        $length = strrpos($this->fileName, '.');
+        $baseName = ($length === false) ? $this->fileName : substr($this->fileName, 0, $length);
         $parts = array_diff(explode('_', $baseName), ['o']);
         if (count($parts) > 1) {
             $dir = $parts[1];

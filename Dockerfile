@@ -1,4 +1,4 @@
-FROM registry.aliyuncs.com/syncxplus/php:7.1.13
+FROM registry.aliyuncs.com/syncxplus/php:7.1.14
 LABEL maintainer="jibo@outlook.com"
 COPY . /var/www
 RUN cd /var/www \
