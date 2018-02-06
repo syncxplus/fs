@@ -13,6 +13,7 @@ class Upload extends \Web
         $this->logger->info($f3->VERB, $f3->REALM);
         $this->fileName = preg_replace(['/^.+[\\\\\\/]/', '/\?.*/'], '', $f3->URI);
         $this->hashName = $this->hash();
+        $this->logger->info('HASH', $this->hashName);
     }
 
     function upload($f3)
