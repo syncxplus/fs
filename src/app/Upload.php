@@ -90,21 +90,23 @@ class Upload extends \Web
 
     /**
      * 根据文件名将文件散列到不同文件夹下
-     * 1492657346558_077499da.xml          -> /077499da/1492657346558_077499da.xml
-     * 1492657394201_077499da_o.jpg        -> /077499da/1492657394201_077499da_o.jpg
-     * 077499daadc640c48e7f8b57bf91b0cf.js -> /077499da/077499daadc640c48e7f8b57bf91b0cf.js
-     * result.json                         -> /result/result.json
+     * explode by '_'
+     *     part0: timestamp (5chars) or app(3chars)
+     *     part1: id (8chars)
+     * otherwise: testbird
      */
     private function hash()
     {
+        $tsLength = 5;
+        $idLength = 8;
         $length = strrpos($this->fileName, '.');
         $baseName = ($length === false) ? $this->fileName : substr($this->fileName, 0, $length);
-        $parts = array_diff(explode('_', $baseName), ['o']);
+        $parts = explode('_', $baseName);
         if (count($parts) > 1) {
-            $dir = $parts[1];
+            $dir = substr($parts[0], 0, $tsLength) . '/' . substr($parts[1], 0, $idLength);
         } else {
-            $dir = substr($parts[0], 0, 8);
+            $dir = 'testbird';
         }
-        return ($dir ? '/' . $dir . '/' : '/') . $this->fileName;
+        return '/' . $dir . '/' . $this->fileName;
     }
 }
