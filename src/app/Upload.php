@@ -8,7 +8,8 @@ class Upload extends \Web
     private $fileName;
     private $hashName;
 
-    function beforeRoute($f3) {
+    function beforeRoute($f3)
+    {
         $this->logger = new \Logger();
         $this->logger->info($f3->get('VERB'), $f3->get('REALM'));
         $start = strrpos($f3->get('URI'), '/');
@@ -50,16 +51,16 @@ class Upload extends \Web
         $file = $f3->get('UPLOADS') . $this->hashName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
-            header('Content-Type: ' . $this->mime($file));
-            readfile($file);
+            header('Content-Type:' . $this->mime($file));
+            header('X-Sendfile:' . $file);
             exit;
         }
         //locate file by request uri
         $file = $f3->get('UPLOADS') . $this->fileName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
-            header('Content-Type: ' . $this->mime($file));
-            readfile($file);
+            header('Content-Type:' . $this->mime($file));
+            header('X-Sendfile:' . $file);
             exit;
         }
         //file not found
@@ -72,14 +73,14 @@ class Upload extends \Web
         $file = $f3->get('UPLOADS') . $this->hashName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
-            header('Content-Type: ' . $this->mime($file));
+            header('Content-Type:' . $this->mime($file));
             exit;
         }
         //locate file by request uri
         $file = $f3->get('UPLOADS') . $this->fileName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
-            header('Content-Type: ' . $this->mime($file));
+            header('Content-Type:' . $this->mime($file));
             exit;
         }
         //file not found
