@@ -34,26 +34,48 @@ class Upload extends \Web
 
     function get($f3)
     {
+        //locate file by hash
+        $file = $f3->get('UPLOADS') . $this->hashName;
+        if (is_file($file)) {
+            header('Content-Length:' . filesize($file));
+            header('Content-Type: ' . $this->mime($file));
+            readfile($file);
+            exit;
+        }
+        //locate file by request uri
         $file = $f3->get('UPLOADS') . $this->fileName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
+            header('Content-Type: ' . $this->mime($file));
             readfile($file);
-        } else {
-            $file = $f3->get('UPLOADS') . $this->hashName;
-            if (is_file($file)) {
-                header('Content-Length:' . filesize($file));
-                header('Content-Type: ' . $this->mime($file));
-                readfile($file);
-            } else {
-                $f3->error(404);
-            }
+            exit;
         }
+        //file not found
+        $f3->error(404);
     }
 
-    /*
+    function head($f3)
+    {
+        //locate file by hash
+        $file = $f3->get('UPLOADS') . $this->hashName;
+        if (is_file($file)) {
+            header('Content-Length:' . filesize($file));
+            header('Content-Type: ' . $this->mime($file));
+            exit;
+        }
+        //locate file by request uri
+        $file = $f3->get('UPLOADS') . $this->fileName;
+        if (is_file($file)) {
+            header('Content-Length:' . filesize($file));
+            header('Content-Type: ' . $this->mime($file));
+            exit;
+        }
+        //file not found
+        $f3->error(404);
+    }
+
+    /**
      * 根据文件名将文件散列到不同文件夹下
-     *
      * 1492657346558_077499da.xml          -> /077499da/1492657346558_077499da.xml
      * 1492657394201_077499da_o.jpg        -> /077499da/1492657394201_077499da_o.jpg
      * 077499daadc640c48e7f8b57bf91b0cf.js -> /077499da/077499daadc640c48e7f8b57bf91b0cf.js
