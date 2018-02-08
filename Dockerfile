@@ -2,7 +2,7 @@ FROM registry.aliyuncs.com/syncxplus/php:7.1.14
 LABEL maintainer="jibo@outlook.com"
 COPY . /var/www
 RUN cd /var/www && apxs -cia mod_xsendfile.c \
-    && mv 000-default.conf /etc/apache2/sites-available/000-default.conf
+    && mv site.conf /etc/apache2/sites-available/000-default.conf
 RUN cd /var/www \
     && composer config --global --auth github-oauth.github.com <token> \
     && composer install && composer clear-cache \
