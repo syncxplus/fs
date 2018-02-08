@@ -12,19 +12,20 @@ class Upload extends \Web
     {
         $this->logger = new \Logger();
         $this->logger->info($f3->get('VERB'), $f3->get('REALM'));
-        $start = strrpos($f3->get('URI'), '/');
+        $length = strlen($f3->get('URI'));
+        $end = strpos($f3->get('URI'), '?');
+        $start = strrpos($f3->get('URI'), '/', ($end === false) ? 0 : $end - $length);
         if ($start === false) {
             $start = 0;
         } else {
             ++ $start;
         }
-        $length = strpos($f3->get('URI'), '?');
-        if ($length === false) {
-            $length = strlen($f3->get('URI')) - $start;
+        if ($end === false) {
+            $end = $length - $start;
         } else {
-            $length -= $start;
+            $end -= $start;
         }
-        $this->fileName = substr($f3->get('URI'), $start, $length);
+        $this->fileName = substr($f3->get('URI'), $start, $end);
         $this->logger->info('BASE', $this->fileName);
         $this->hashName = $this->hash();
         $this->logger->info('HASH', $this->hashName);
@@ -102,7 +103,7 @@ class Upload extends \Web
         if (count($parts) > 1) {
             $dir = $parts[1];
         } else {
-            $dir = substr($parts[0], 0, min(strlen($baseName), 8));
+            $dir = substr($parts[0], 0, 8);
         }
         return ($dir ? '/' . $dir . '/' : '/') . $this->fileName;
     }
