@@ -1,9 +1,0 @@
-version: '2'
-services:
-    default:
-        image: registry.aliyuncs.com/syncxplus/php:7.1.13
-        restart: always
-        ports:
-            - '80:80'
-        volumes:
-            - .:/var/www
