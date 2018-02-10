@@ -48,12 +48,13 @@ class Upload extends \Web
 
     function get($f3)
     {
+        $data = substr($f3->get('UPLOADS'), strlen($f3->get('ROOT')));
         //locate file by hash
         $file = $f3->get('UPLOADS') . $this->hashName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
             header('Content-Type:' . $this->mime($file));
-            header('X-Sendfile:' . $file);
+            header('X-Accel-Redirect:/' . $data . $this->hashName);
             exit;
         }
         //locate file by request uri
@@ -61,7 +62,7 @@ class Upload extends \Web
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
             header('Content-Type:' . $this->mime($file));
-            header('X-Sendfile:' . $file);
+            header('X-Accel-Redirect:/' . $data . $this->fileName);
             exit;
         }
         //locate file in testbird
@@ -69,7 +70,7 @@ class Upload extends \Web
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
             header('Content-Type:' . $this->mime($file));
-            header('X-Sendfile:' . $file);
+            header('X-Accel-Redirect:/' . $data . '/testbird/' . $this->fileName);
             exit;
         }
         //file not found
