@@ -64,6 +64,14 @@ class Upload extends \Web
             header('X-Sendfile:' . $file);
             exit;
         }
+        //locate file in testbird
+        $file = $f3->get('UPLOADS') . 'testbird/' . $this->fileName;
+        if (is_file($file)) {
+            header('Content-Length:' . filesize($file));
+            header('Content-Type:' . $this->mime($file));
+            header('X-Sendfile:' . $file);
+            exit;
+        }
         //file not found
         $f3->error(404);
     }
@@ -79,6 +87,13 @@ class Upload extends \Web
         }
         //locate file by request uri
         $file = $f3->get('UPLOADS') . $this->fileName;
+        if (is_file($file)) {
+            header('Content-Length:' . filesize($file));
+            header('Content-Type:' . $this->mime($file));
+            exit;
+        }
+        //locate file in testbird
+        $file = $f3->get('UPLOADS') . 'testbird/' . $this->fileName;
         if (is_file($file)) {
             header('Content-Length:' . filesize($file));
             header('Content-Type:' . $this->mime($file));
