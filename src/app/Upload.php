@@ -50,57 +50,21 @@ class Upload extends \Web
     {
         //locate file by hash
         $file = $f3->get('UPLOADS') . $this->hashName;
-        if (is_file($file)) {
-            header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
-            header('X-Sendfile:' . $file);
-            exit;
-        }
+        if (is_file($file)) goto FOUND;
         //locate file by request uri
         $file = $f3->get('UPLOADS') . $this->fileName;
-        if (is_file($file)) {
-            header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
-            header('X-Sendfile:' . $file);
-            exit;
-        }
+        if (is_file($file)) goto FOUND;
         //locate file in testbird
         $file = $f3->get('UPLOADS') . 'testbird/' . $this->fileName;
-        if (is_file($file)) {
-            header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
+        if (is_file($file)) goto FOUND;
+        $f3->error(404);
+        exit;
+        FOUND:
+        header('Content-Length:' . filesize($file));
+        header('Content-Type:' . $this->mime($file));
+        if ($f3->get('VERB') === 'GET') {
             header('X-Sendfile:' . $file);
-            exit;
         }
-        //file not found
-        $f3->error(404);
-    }
-
-    function head($f3)
-    {
-        //locate file by hash
-        $file = $f3->get('UPLOADS') . $this->hashName;
-        if (is_file($file)) {
-            header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
-            exit;
-        }
-        //locate file by request uri
-        $file = $f3->get('UPLOADS') . $this->fileName;
-        if (is_file($file)) {
-            header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
-            exit;
-        }
-        //locate file in testbird
-        $file = $f3->get('UPLOADS') . 'testbird/' . $this->fileName;
-        if (is_file($file)) {
-            header('Content-Length:' . filesize($file));
-            header('Content-Type:' . $this->mime($file));
-            exit;
-        }
-        //file not found
-        $f3->error(404);
     }
 
     /**
