@@ -74,13 +74,32 @@ class Upload extends \Web
     {
         $version = intval(getenv('FSV'));
         /*
+         * version 1
+         * 1492657346558_077499da.xml          -> /077499da/1492657346558_077499da.xml
+         * 1492657394201_077499da_o.jpg        -> /077499da/1492657394201_077499da_o.jpg
+         * 077499daadc640c48e7f8b57bf91b0cf.js -> /077499da/077499daadc640c48e7f8b57bf91b0cf.js
+         * result.json                         -> /result/result.json
+         */
+        if ($version === 1) {
+            $length = strrpos($this->fileName, '.');
+            $baseName = ($length === false) ? $this->fileName : substr($this->fileName, 0, $length);
+            $parts = array_diff(explode('_', $baseName), ['o']);
+            if (count($parts) > 1) {
+                $dir = $parts[1];
+            } else {
+                $dir = substr($parts[0], 0, 8);
+            }
+            return ($dir ? '/' . $dir . '/' : '/') . $this->fileName;
+        }
+        /*
+         * use latest as default
          * version 2
          * explode by '_'
          *     part0: timestamp (5chars) or app(3chars)
          *     part1: id (8chars)
          * otherwise: testbird
          */
-        if ($version === 2) {
+        else {
             $tsLength = 5;
             $idLength = 8;
             $length = strrpos($this->fileName, '.');
@@ -92,24 +111,6 @@ class Upload extends \Web
                 $dir = 'testbird';
             }
             return '/' . $dir . '/' . $this->fileName;
-        }
-        /*
-         * version 1
-         * 1492657346558_077499da.xml          -> /077499da/1492657346558_077499da.xml
-         * 1492657394201_077499da_o.jpg        -> /077499da/1492657394201_077499da_o.jpg
-         * 077499daadc640c48e7f8b57bf91b0cf.js -> /077499da/077499daadc640c48e7f8b57bf91b0cf.js
-         * result.json                         -> /result/result.json
-         */
-        else {
-            $length = strrpos($this->fileName, '.');
-            $baseName = ($length === false) ? $this->fileName : substr($this->fileName, 0, $length);
-            $parts = array_diff(explode('_', $baseName), ['o']);
-            if (count($parts) > 1) {
-                $dir = $parts[1];
-            } else {
-                $dir = substr($parts[0], 0, 8);
-            }
-            return ($dir ? '/' . $dir . '/' : '/') . $this->fileName;
         }
     }
 }
