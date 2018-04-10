@@ -67,6 +67,26 @@ class Upload extends \Web
         }
     }
 
+    function delete($f3)
+    {
+        //locate file by hash
+        $file = $f3->get('UPLOADS') . $this->hashName;
+        if (is_file($file)) {
+            return $this->deleteFile($file);
+        }
+        //locate file by request uri
+        $file = $f3->get('UPLOADS') . $this->fileName;
+        if (is_file($file)) {
+            return $this->deleteFile($file);
+        }
+        //locate file in testbird
+        $file = $f3->get('UPLOADS') . 'testbird/' . $this->fileName;
+        if (is_file($file)) {
+            return $this->deleteFile($file);
+        }
+        header('HTTP/1.1 204 No Content');
+    }
+
     /**
      * 根据文件名将文件散列到不同文件夹下
      */
@@ -111,6 +131,14 @@ class Upload extends \Web
                 $dir = 'testbird';
             }
             return '/' . $dir . '/' . $this->fileName;
+        }
+    }
+
+    private function deleteFile($file) {
+        if (unlink($file)) {
+            header('HTTP/1.1 200 OK');
+        } else {
+            header('HTTP/1.1 202 Accepted');
         }
     }
 }
