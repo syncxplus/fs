@@ -11,7 +11,7 @@ class Upload extends \Web
     function beforeRoute($f3)
     {
         $this->logger = new \Logger();
-        $this->logger->info($f3->get('VERB'), $f3->get('REALM'));
+        $this->logger->info($f3->get('VERB') . ' ' . $f3->get('REALM'));
         $length = strlen($f3->get('URI'));
         $end = strpos($f3->get('URI'), '?');
         $start = strrpos($f3->get('URI'), '/', ($end === false) ? 0 : $end - $length);
@@ -26,9 +26,9 @@ class Upload extends \Web
             $end -= $start;
         }
         $this->fileName = substr($f3->get('URI'), $start, $end);
-        $this->logger->info('BASE', $this->fileName);
+        $this->logger->info('BASE ' . $this->fileName);
         $this->hashName = $this->hash();
-        $this->logger->info('HASH', $this->hashName);
+        $this->logger->info('HASH ' . $this->hashName);
     }
 
     function upload($f3)
@@ -135,6 +135,7 @@ class Upload extends \Web
     }
 
     private function deleteFile($file) {
+        $this->logger->info('REMOVE ' . $file);
         if (unlink($file)) {
             header('HTTP/1.1 200 OK');
         } else {
