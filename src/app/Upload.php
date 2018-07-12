@@ -60,10 +60,12 @@ class Upload extends \Web
         $f3->error(404);
         exit;
         FOUND:
-        header('Content-Length:' . filesize($file));
-        header('Content-Type:' . $this->mime($file));
         if ($f3->get('VERB') === 'GET') {
             header('X-Sendfile:' . $file);
+        } else {
+            clearstatcache();
+            header('Content-Length:' . filesize($file));
+            header('Content-Type:' . $this->mime($file));
         }
     }
 
