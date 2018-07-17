@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+    <link href="http://cdn.bootcss.com/zui/1.5.0/css/zui.min.css" rel="stylesheet"/>
+    <style>
+        .form-control {
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form id="upload-form" enctype="multipart/form-data">
+        <input id="upload-file" class="form-control" type="file" name="upload-test" />
+        <button class="btn btn-default clear" type="button">清除</button>
+        <button class="btn btn-primary upload" type="button">上传</button>
+    </form>
+    <hr/>
+    <p class="help-block">Upload:</p>
+    <table class="table"></table>
+</div>
+<script src="http://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(function () {
+        $(".clear").on("click", clear);
+        $(".upload").on("click", upload);
+    })
+    function clear() {
+        $("input[type=file]").val("");
+        $("table").empty();
+    }
+    function upload() {
+        var file = fileInfo(document.getElementById("upload-file"));
+        if (!file) {
+            alert("未选择文件");
+            return;
+        }
+        var url = "{{@base}}/Upload/" + file.name;
+        $.ajax({
+            url: url,
+            type: "PUT",
+            cache: false,
+            data: new FormData(document.getElementById("upload-form")),
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                console.log("before");
+            }
+        }).done(function (data, textStatus, jqXHR) {
+            console.log(data, textStatus, jqXHR);
+            var html = '<tr><td>' + textStatus + '</td><td><a href="' + url + '" target="_blank">' + file.name + '</a></td></tr>';
+            $(".table").empty().append(html);
+        }).fail(console.log);
+    }
+    function fileInfo(file) {
+        return file ? (file.files ? file.files[0] : {}) : {}
+    }
+</script>
+</body>
+</html>
