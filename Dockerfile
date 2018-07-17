@@ -1,4 +1,4 @@
-FROM registry.aliyuncs.com/syncxplus/php:7.1.19
+FROM registry.aliyuncs.com/syncxplus/php:7.2.7
 LABEL maintainer="jibo@outlook.com"
 COPY . /var/www
 RUN cd /var/www && apxs -cia mod_xsendfile.c \
