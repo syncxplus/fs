@@ -8,7 +8,7 @@
     ],
     "license": "Unlicense",
     "require": {
-        "bcosca/fatfree": "dev-3.6.3-syncxplus"
+        "bcosca/fatfree": "dev-3.6.4-syncxplus"
     },
     "repositories": {
         "0": {
