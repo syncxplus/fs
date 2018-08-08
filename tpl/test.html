@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="container">
-    <form id="upload-form" enctype="multipart/form-data">
+    <form id="upload-form">
         <input id="upload-file" class="form-control" type="file" name="upload-test"/>
         <button class="btn btn-default clear" type="button">清除</button>
         <button class="btn btn-primary upload" type="button">上传</button>
@@ -44,7 +44,7 @@
             url: url,
             type: "PUT",
             cache: false,
-            data: new FormData(document.getElementById("upload-form")),
+            data: file,
             contentType: false,
             processData: false,
             beforeSend: function () {
