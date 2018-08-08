@@ -38,7 +38,7 @@ class Upload extends \Web
             $f3->error(500);
         } else {
             $target = $f3->get('UPLOADS') . $this->hashName;
-            if (!is_dir(dirname($target)))  {
+            if (!is_dir(dirname($target))) {
                 mkdir(dirname($target), 0755, true);
             }
             rename($receive['tmp_name'], $target);
@@ -112,8 +112,7 @@ class Upload extends \Web
                 $dir = substr($parts[0], 0, 8);
             }
             return ($dir ? '/' . $dir . '/' : '/') . $this->fileName;
-        }
-        /*
+        } /*
          * use latest as default
          * version 2
          * explode by '_'
@@ -136,7 +135,8 @@ class Upload extends \Web
         }
     }
 
-    private function deleteFile($file) {
+    private function deleteFile($file)
+    {
         $this->logger->info('REMOVE ' . $file);
         if (unlink($file)) {
             header('HTTP/1.1 200 OK');

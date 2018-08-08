@@ -6,6 +6,5 @@
 .dockerignore
 .gitignore
 composer.lock
-docker-compose.yml
 Dockerfile
 README.md
