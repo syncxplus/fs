@@ -8,9 +8,7 @@ RUN mv /var/www/php.ini /usr/local/etc/php/php.ini
 RUN chown -R www-data:www-data /var/www
 USER www-data
 RUN cd /var/www \
-    && composer config --global --auth github-oauth.github.com <token> \
     && composer install && composer clear-cache \
-    && mv base.php /var/www/vendor/bcosca/fatfree/lib/base.php \
-    && mv web.php /var/www/vendor/bcosca/fatfree/lib/web.php
+    && mv base.php web.php /var/www/vendor/bcosca/fatfree/lib/
 VOLUME ['/var/www/html/data']
 USER root
