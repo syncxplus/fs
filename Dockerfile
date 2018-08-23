@@ -1,4 +1,4 @@
-FROM registry.aliyuncs.com/syncxplus/php:7.2.8
+FROM registry.aliyuncs.com/syncxplus/php:7.2.9
 LABEL maintainer="jibo@outlook.com"
 COPY . /var/www
 RUN cd /var/www && apxs -cia mod_xsendfile.c \
@@ -8,7 +8,7 @@ RUN mv /var/www/php.ini /usr/local/etc/php/php.ini
 RUN chown -R www-data:www-data /var/www
 USER www-data
 RUN cd /var/www \
-    && composer install && composer clear-cache \
+    && composer install --optimize-autoloader && composer clear-cache \
     && mv base.php web.php /var/www/vendor/bcosca/fatfree/lib/
 VOLUME ['/var/www/html/data']
 USER root

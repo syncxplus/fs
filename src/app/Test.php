@@ -8,8 +8,8 @@ class Test
 
     function beforeRoute($f3)
     {
-        $this->logger = new \Logger();
-        $this->logger->info($f3->get('VERB') . ' ' . $f3->get('REALM'));
+        $this->logger = new \Log(date('Y-m-d.\l\o\g'));
+        $this->logger->write($f3->get('VERB') . ' ' . $f3->get('REALM'));
     }
 
     function get($f3)
